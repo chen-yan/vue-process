@@ -557,6 +557,8 @@ const filteredBlocks = (type) => {
   })
 }
 const addBlock = () => {
+  console.log(container)
+  console.log(selectedType.value)
   container.addNewBlock(selectedType.value)
 }
 const saveProperty = (val) => {
@@ -668,11 +670,12 @@ const selectBlocksType = computed(() => {
 </template>
 
 <style lang='less'>
-.wrapper{
+.wrapper {
   width: ~"calc(100% - 40px)";
   height: ~"calc(100% - 40px)";
   padding: 20px 0 0 20px;
 }
+
 .container {
   width: 100%;
   height: ~"calc(100% - 50px)";
