@@ -14,7 +14,15 @@
     />
   </div>
 </template>
+<script setup>
+import { defineExpose, ref } from 'vue'
 
+const testMethod = () => {
+  console.log('test method.')
+}
+
+defineExpose({ testMethod })
+</script>
 <script>
 import merge from 'deepmerge'
 import mouseHelper from './helpers/mouse.js'

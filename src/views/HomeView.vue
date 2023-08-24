@@ -559,7 +559,8 @@ const filteredBlocks = (type) => {
 const addBlock = () => {
   console.log(container)
   console.log(selectedType.value)
-  container.addNewBlock(selectedType.value)
+  container.value.testMethod()
+  container.value.addNewBlock(selectedType.value)
 }
 const saveProperty = (val) => {
   console.log(val)
