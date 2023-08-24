@@ -628,7 +628,7 @@ const selectBlocksType = computed(() => {
 </script>
 
 <template>
-  <div style='width: 100%; height: 100vh'>
+  <div class='wrapper'>
     <VueBlocksContainer
       @contextmenu.native='showContextMenu'
       @click.native='closeContextMenu'
@@ -668,6 +668,11 @@ const selectBlocksType = computed(() => {
 </template>
 
 <style lang='less'>
+.wrapper{
+  width: ~"calc(100% - 40px)";
+  height: ~"calc(100% - 40px)";
+  padding: 20px 0 0 20px;
+}
 .container {
   width: 100%;
   height: ~"calc(100% - 50px)";
