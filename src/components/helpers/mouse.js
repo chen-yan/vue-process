@@ -1,11 +1,11 @@
-import {getOffsetRect} from './dom'
+import {getOffsetRect} from './dom.js'
 
 /**
  * @param event {MouseEvent}
  * @param element {HTMLElement}
  * @return {{x: number, y: number}}
  */
-export function getMousePosition (element, event) {
+export function getMousePosition(element, event) {
   let mouseX = event.pageX || event.clientX + document.documentElement.scrollLeft
   let mouseY = event.pageY || event.clientY + document.documentElement.scrollTop
 
