@@ -53,7 +53,7 @@ const data = reactive({
       {
         id: 2,
         x: 0,
-        y: 50,
+        y: 150,
         name: 'test',
         title: 'Test block 2',
         values: {
