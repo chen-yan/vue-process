@@ -19,7 +19,7 @@
 import {computed, defineExpose, onBeforeUnmount, onMounted, reactive, ref, watch} from 'vue'
 import VueLink from "@/components/VueLink.vue";
 import VueBlock from "@/components/VueBlock.vue";
-import mouseHelper from "@/components/helpers/mouse.ts";
+import {getMousePosition} from "@/components/helpers/mouse.ts";
 import merge from "deepmerge";
 
 const root = ref(null)
@@ -163,7 +163,7 @@ const blockPositionUpdated = (block, event) => {
 }
 
 const handleMove = (e) => {
-  let mouse = mouseHelper.getMousePosition(root.value, e)
+  let mouse = getMousePosition(root.value, e)
   mouseX.value = mouse.x
   mouseY.value = mouse.y
 
@@ -195,7 +195,7 @@ const handleDown = (e) => {
   if ((target === root.value || target.matches('svg, svg *')) && e.which === 1) {
     dragging.value = true
 
-    let mouse = mouseHelper.getMousePosition(root.value, e)
+    let mouse = getMousePosition(root.value, e)
     mouseX.value = mouse.x
     mouseY.value = mouse.y
 
@@ -353,7 +353,7 @@ const removeLink = (linkID) => {
   })
 }
 
-const getBoundingClientRect = ()=>{
+const getBoundingClientRect = () => {
   return root.value.getBoundingClientRect()
 }
 
