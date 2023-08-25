@@ -11,6 +11,7 @@
               @linkingBreak='linkingBreak(block, $event)'
               @select='blockSelect(block)'
               @delete='blockDelete(block)'
+              @updatePosition='blockPositionUpdated(block, $event)'
     />
   </div>
 </template>
@@ -155,6 +156,11 @@ const lines = computed(() => {
 
   return lines
 })
+
+const blockPositionUpdated = (block, event) => {
+  block.x = event.x
+  block.y = event.y
+}
 
 const handleMove = (e) => {
   let mouse = mouseHelper.getMousePosition(root.value, e)
@@ -558,7 +564,6 @@ const exportScene = () => {
     delete value['inputs']
     delete value['outputs']
     delete value['selected']
-
     return value
   })
 
