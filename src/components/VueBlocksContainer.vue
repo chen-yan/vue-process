@@ -352,6 +352,11 @@ const removeLink = (linkID) => {
     return !(value.id === linkID)
   })
 }
+
+const getBoundingClientRect = ()=>{
+  return root.value.getBoundingClientRect()
+}
+
 // Blocks
 const addNewBlock = (nodeName, x, y) => {
   let maxID = Math.max(0, ...blocks.value.map(function (o) {
@@ -608,7 +613,7 @@ watch(props.scene, (_new, _pre) => {
   importScene()
 })
 
-defineExpose({addNewBlock})
+defineExpose({addNewBlock, getBoundingClientRect})
 </script>
 
 <style lang='less' scoped>

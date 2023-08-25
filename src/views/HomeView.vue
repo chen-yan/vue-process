@@ -171,7 +171,8 @@ const blocks = reactive([
     ]
   }
 ])
-let container = ref(null)
+let container = ref<HTMLImageElement|null>(null)
+let menuRef = ref(null)
 let scene = reactive({
   blocks: [
     {
@@ -581,17 +582,16 @@ const showContextMenu = (e) => {
 
   nextTick(function () {
     setMenu(e.y, e.x)
-    contextMenu.focus()
+    menuRef.value.focus()
   })
 }
 const setMenu = (top, left) => {
   let border = 5
-  let contextMenuEl = contextMenu
+  let contextMenuEl = menuRef.value
   let containerElRect = container.value.getBoundingClientRect()
   let largestWidth = containerElRect.right - contextMenuEl.offsetWidth - border
   let largestHeight = containerElRect.bottom - contextMenuEl.offsetHeight - border
 
-  console.log(container)
   console.log(containerElRect)
 
   if (left > largestWidth) left = largestWidth
@@ -655,7 +655,7 @@ const selectBlocksType = computed(() => {
       <input type='checkbox' v-model='useContextMenu' id='useContextMenu'>Use right click for Add blocks
     </label>
 
-    <ul id='contextMenu' ref='contextMenu' tabindex='-1' v-show='contextMenu.isShow'
+    <ul id='contextMenu' ref='menuRef' tabindex='-1' v-show='contextMenu.isShow'
         @blur='closeContextMenu'
         :style="{top: contextMenu.top + 'px', left: contextMenu.left + 'px'}">
       <template v-for='type in selectBlocksType'>
