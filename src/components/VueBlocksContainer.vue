@@ -19,7 +19,7 @@
 import {computed, defineExpose, onBeforeUnmount, onMounted, reactive, ref, watch} from 'vue'
 import VueLink from "@/components/VueLink.vue";
 import VueBlock from "@/components/VueBlock.vue";
-import mouseHelper from "@/components/helpers/mouse.js";
+import mouseHelper from "@/components/helpers/mouse.ts";
 import merge from "deepmerge";
 
 const root = ref(null)

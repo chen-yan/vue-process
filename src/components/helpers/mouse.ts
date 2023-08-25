@@ -1,4 +1,15 @@
-import {getOffsetRect} from './dom.js'
+/**
+ * @param element {HTMLElement}
+ * @return {{top: number, left: number}}
+ */
+export function getOffsetRect(element) {
+  let box = element.getBoundingClientRect()
+  let {pageYOffset: scrollTop, pageXOffset: scrollLeft} = window
+  let top = box.top + scrollTop
+  let left = box.left + scrollLeft
+
+  return {top: Math.round(top), left: Math.round(left)}
+}
 
 /**
  * @param event {MouseEvent}
@@ -20,5 +31,6 @@ export function getMousePosition(element, event) {
 }
 
 export default {
+  getOffsetRect,
   getMousePosition
 }

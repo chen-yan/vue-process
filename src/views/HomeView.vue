@@ -3,7 +3,7 @@ import VueBlocksContainer from '../components/VueBlocksContainer.vue'
 import VueBlockProperty from '../components/VueBlockProperty.vue'
 import merge from 'deepmerge'
 import {reactive, ref, nextTick, computed} from 'vue'
-import domHelper from '../components/helpers/dom.js'
+import domHelper from '../components/helpers/mouse.ts'
 
 const blocks = reactive([
   {
