@@ -544,7 +544,6 @@ let contextMenu = reactive({
 })
 
 const selectBlock = (block) => {
-  console.log('select', block)
   selectedBlock.value = block
 }
 const deselectBlock = (block) => {

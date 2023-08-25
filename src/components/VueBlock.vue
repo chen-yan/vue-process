@@ -1,11 +1,11 @@
 <template>
   <div class="vue-block" :class="{selected: selected}" :style="style">
     <header :style="headerStyle">
-      {{ title }}
+      {{ model.title }}
       <a class="delete" @click="deleteBlock">x</a>
     </header>
     <div class="inputs">
-      <div class="input" v-for="(slot, index) in inputs">
+      <div class="input" v-for="(slot, index) in model.inputs">
         <div class="circle inputSlot" :class="{active: slot.active}"
              @mouseup="slotMouseUp($event, index)"
              @mousedown="slotBreak($event, index)"></div>
@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="outputs">
-      <div class="output" v-for="(slot, index) in outputs">
+      <div class="output" v-for="(slot, index) in model.outputs">
         <div class="circle" :class="{active: slot.active}"
              @mousedown="slotMouseDown($event, index)"></div>
         {{ slot.label }}
@@ -26,28 +26,10 @@
 export default {
   name: 'VueBlock',
   props: {
-    x: {
-      type: Number,
-      default: 0,
-      validator: function (val) {
-        return typeof val === 'number'
-      }
-    },
-    y: {
-      type: Number,
-      default: 0,
-      validator: function (val) {
-        return typeof val === 'number'
-      }
+    model: {
+      type: Object
     },
     selected: Boolean,
-    title: {
-      type: String,
-      default: 'Title'
-    },
-    inputs: Array,
-    outputs: Array,
-
     options: {
       type: Object
     }
@@ -65,8 +47,8 @@ export default {
     document.documentElement.addEventListener('mousemove', this.handleMove, true)
     document.documentElement.addEventListener('mousedown', this.handleDown, true)
     document.documentElement.addEventListener('mouseup', this.handleUp, true)
-    this.position.x = this.x
-    this.position.y = this.y
+    this.position.x = this.model.x
+    this.position.y = this.model.y
   },
   beforeDestroy() {
     document.documentElement.removeEventListener('mousemove', this.handleMove, true)
@@ -156,8 +138,6 @@ export default {
       this.position.x = left
       this.position.y = top
       this.$emit('updatePosition', this.position)
-      // this.$emit('update:x', left)
-      // this.$emit('update:y', top)
     }
   },
   computed: {

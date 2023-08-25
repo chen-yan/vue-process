@@ -3,7 +3,7 @@
     <VueLink :lines='lines'/>
     <VueBlock v-for='block in blocks'
               :key='block.id'
-              v-bind.sync='block'
+              :model='block'
               :options='optionsForChild'
               @update='updateScene'
               @linkingStart='linkingStart(block, $event)'
