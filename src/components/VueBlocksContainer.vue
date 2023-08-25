@@ -440,7 +440,7 @@ const deselectAll = (withoutID = null) => {
   })
 }
 
-const emit = defineEmits(['blockSelect', 'blockDeselect', 'update:scene'])
+const emit = defineEmits(['blockSelect', 'blockDeselect', 'updateScene'])
 
 // Events
 const blockSelect = (block) => {
@@ -570,16 +570,14 @@ const exportScene = () => {
     return value
   })
 
-  let _new_data = {
+  return {
     blocks: _blocks,
     links: links.value,
     container: container.value
   }
-  console.log(_new_data)
-  return _new_data
 }
 const updateScene = () => {
-  emit('update:scene', exportScene())
+  emit('updateScene', exportScene())
 }
 
 onMounted(() => {
@@ -605,11 +603,11 @@ onBeforeUnmount(() => {
   }
 })
 
-watch(props.blocksContent, (_new, _pre) => {
+watch(() => props.blocksContent, (_new, _pre) => {
   importBlocksContent()
 })
 
-watch(props.scene, (_new, _pre) => {
+watch(() => props.scene, (_new, _pre) => {
   importScene()
 })
 

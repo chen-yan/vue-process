@@ -2,7 +2,7 @@
 import VueBlocksContainer from '../components/VueBlocksContainer.vue'
 import VueBlockProperty from '../components/VueBlockProperty.vue'
 import merge from 'deepmerge'
-import {reactive, ref, nextTick, computed} from 'vue'
+import { reactive, ref, nextTick, computed } from 'vue'
 import domHelper from '../components/helpers/mouse.ts'
 
 const blocks = reactive([
@@ -186,55 +186,55 @@ const blocks = reactive([
     ]
   }
 ])
-let container = ref<HTMLImageElement|null>(null)
+let container = ref<HTMLImageElement | null>(null)
 let menuRef = ref(null)
-let scene = reactive({
-  "blocks": [
+let scene = ref({
+  'blocks': [
     {
-      "id": 2,
-      "x": -700,
-      "y": -69,
-      "name": "Chat message",
-      "title": "Chat message",
-      "values": {
-        "property": [
+      'id': 2,
+      'x': -700,
+      'y': -69,
+      'name': 'Chat message',
+      'title': 'Chat message',
+      'values': {
+        'property': [
           {
-            "name": "message",
-            "type": "string"
+            'name': 'message',
+            'type': 'string'
           }
         ]
       }
     },
     {
-      "id": 6,
-      "x": -440,
-      "y": -15.5,
-      "name": "delay",
-      "title": "Delay",
-      "values": {
-        "property": {
-          "delay": {
-            "label": "Delay (s)",
-            "type": "number",
-            "value": 1
+      'id': 6,
+      'x': -440,
+      'y': -15.5,
+      'name': 'delay',
+      'title': 'Delay',
+      'values': {
+        'property': {
+          'delay': {
+            'label': 'Delay (s)',
+            'type': 'number',
+            'value': 1
           }
         }
       }
     }
   ],
-  "links": [
+  'links': [
     {
-      "id": 10,
-      "originID": 2,
-      "originSlot": 0,
-      "targetID": 6,
-      "targetSlot": 0
+      'id': 10,
+      'originID': 2,
+      'originSlot': 0,
+      'targetID': 6,
+      'targetSlot': 0
     }
   ],
-  "container": {
-    "centerX": 924,
-    "centerY": 258,
-    "scale": 1
+  'container': {
+    'centerX': 924,
+    'centerY': 258,
+    'scale': 1
   }
 })
 let selectedBlock = ref(null)
@@ -251,8 +251,11 @@ let contextMenu = reactive({
 const selectBlock = (block) => {
   selectedBlock.value = block
 }
+const updateScene = (_scene) => {
+  scene.value = _scene
+}
 const deselectBlock = (block) => {
-  console.log('deselect', block)
+  // console.log('deselect', block)
   selectedBlock.value = null
 }
 const filteredBlocks = (type) => {
@@ -261,20 +264,16 @@ const filteredBlocks = (type) => {
   })
 }
 const addBlock = () => {
-  console.log(container)
-  console.log(selectedType.value)
   container.value.addNewBlock(selectedType.value)
 }
 const saveProperty = (val) => {
-  console.log(val)
-
-  let _scene = scene
+  let _scene = scene.value
   let block = _scene.blocks.find(b => {
     return b.id === selectedBlock.value.id
   })
   block.values.property = val
 
-  scene = merge({}, _scene)
+  scene.value = merge({}, _scene)
 }
 const showContextMenu = (e) => {
   if (!useContextMenu.value) return
@@ -284,7 +283,7 @@ const showContextMenu = (e) => {
   contextMenu.mouseX = e.x
   contextMenu.mouseY = e.y
 
-  nextTick(function () {
+  nextTick(function() {
     setMenu(e.y, e.x)
     menuRef.value.focus()
   })
@@ -335,15 +334,16 @@ const selectBlocksType = computed(() => {
 <template>
   <div class='wrapper'>
     <VueBlocksContainer
-        @contextmenu.native='showContextMenu'
-        @click.native='closeContextMenu'
-        ref='container'
-        :blocksContent='blocks'
-        :scene.sync='scene'
-        @blockSelect='selectBlock'
-        @blockDeselect='deselectBlock'
-        class='container'/>
-    <VueBlockProperty :property='selectedBlockProperty' @save='saveProperty'/>
+      @contextmenu.native='showContextMenu'
+      @click.native='closeContextMenu'
+      ref='container'
+      :blocksContent='blocks'
+      :scene='scene'
+      @blockSelect='selectBlock'
+      @blockDeselect='deselectBlock'
+      @updateScene='updateScene'
+      class='container' />
+    <VueBlockProperty :property='selectedBlockProperty' @save='saveProperty' />
     <label>
       <select name='type' v-model='selectedType'>
         <template v-for='type in selectBlocksType'>

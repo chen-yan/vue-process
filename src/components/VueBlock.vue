@@ -12,17 +12,17 @@
     <div class='properties'>
       <div class='inputs'>
         <div class='input' v-for='(slot, index) in model.inputs'>
-          <div class='circle inputSlot' :class='{active: slot.active}'
-               @mouseup='slotMouseUp($event, index)'
-               @mousedown='slotBreak($event, index)'></div>
-          {{ slot.label }}
+          <em class='circle inputSlot' :class='{active: slot.active}'
+              @mouseup='slotMouseUp($event, index)'
+              @mousedown='slotBreak($event, index)'></em>
+          <span>{{ slot.label }}</span>
         </div>
       </div>
       <div class='outputs'>
         <div class='output' v-for='(slot, index) in model.outputs'>
-          <div class='circle' :class='{active: slot.active}'
-               @mousedown='slotMouseDown($event, index)'></div>
-          {{ slot.label }}
+          <em class='circle' :class='{active: slot.active}'
+              @mousedown='slotMouseDown($event, index)'></em>
+          <span>{{ slot.label }}</span>
         </div>
       </div>
     </div>
