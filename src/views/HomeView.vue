@@ -2,7 +2,7 @@
 import VueBlocksContainer from '../components/VueBlocksContainer.vue'
 import VueBlockProperty from '../components/VueBlockProperty.vue'
 import merge from 'deepmerge'
-import { reactive, ref, nextTick, computed } from 'vue'
+import {reactive, ref, nextTick, computed} from 'vue'
 import domHelper from '../components/helpers/dom.js'
 
 const blocks = reactive([
@@ -559,7 +559,6 @@ const filteredBlocks = (type) => {
 const addBlock = () => {
   console.log(container)
   console.log(selectedType.value)
-  container.value.testMethod()
   container.value.addNewBlock(selectedType.value)
 }
 const saveProperty = (val) => {
@@ -581,7 +580,7 @@ const showContextMenu = (e) => {
   contextMenu.mouseX = e.x
   contextMenu.mouseY = e.y
 
-  nextTick(function() {
+  nextTick(function () {
     setMenu(e.y, e.x)
     contextMenu.focus()
   })
@@ -589,7 +588,7 @@ const showContextMenu = (e) => {
 const setMenu = (top, left) => {
   let border = 5
   let contextMenuEl = contextMenu
-  let containerElRect = container.$el.getBoundingClientRect()
+  let containerElRect = container.value.getBoundingClientRect()
   let largestWidth = containerElRect.right - contextMenuEl.offsetWidth - border
   let largestHeight = containerElRect.bottom - contextMenuEl.offsetHeight - border
 
@@ -603,11 +602,11 @@ const setMenu = (top, left) => {
   contextMenu.left = left
 }
 const addBlockContextMenu = (name) => {
-  let offset = domHelper.getOffsetRect(container.$el)
+  let offset = domHelper.getOffsetRect(container.value)
   let x = contextMenu.mouseX - offset.left
   let y = contextMenu.mouseY - offset.top
 
-  container.addNewBlock(name, x, y)
+  container.value.addNewBlock(name, x, y)
   closeContextMenu()
 }
 const closeContextMenu = () => {
@@ -633,15 +632,15 @@ const selectBlocksType = computed(() => {
 <template>
   <div class='wrapper'>
     <VueBlocksContainer
-      @contextmenu.native='showContextMenu'
-      @click.native='closeContextMenu'
-      ref='container'
-      :blocksContent='blocks'
-      :scene.sync='scene'
-      @blockSelect='selectBlock'
-      @blockDeselect='deselectBlock'
-      class='container' />
-    <VueBlockProperty :property='selectedBlockProperty' @save='saveProperty' />
+        @contextmenu.native='showContextMenu'
+        @click.native='closeContextMenu'
+        ref='container'
+        :blocksContent='blocks'
+        :scene.sync='scene'
+        @blockSelect='selectBlock'
+        @blockDeselect='deselectBlock'
+        class='container'/>
+    <VueBlockProperty :property='selectedBlockProperty' @save='saveProperty'/>
     <label>
       <select name='type' v-model='selectedType'>
         <template v-for='type in selectBlocksType'>
