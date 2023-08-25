@@ -45,66 +45,54 @@ onMounted(() => {
   position.value.x = props.model.x
   position.value.y = props.model.y
   if (document) {
-    document.documentElement.addEventListener('mousemove', handleMove, true)
-    document.documentElement.addEventListener('mousedown', handleDown, true)
-    document.documentElement.addEventListener('mouseup', handleUp, true)
+    document.documentElement.addEventListener('mousemove', onMouseMove, true)
+    document.documentElement.addEventListener('mousedown', onMouseDown, true)
+    document.documentElement.addEventListener('mouseup', onMouseUp, true)
   }
 })
 onBeforeUnmount(() => {
   if (document) {
-    document.documentElement.removeEventListener('mousemove', handleMove, true)
-    document.documentElement.removeEventListener('mousedown', handleDown, true)
-    document.documentElement.removeEventListener('mouseup', handleUp, true)
+    document.documentElement.removeEventListener('mousemove', onMouseMove, true)
+    document.documentElement.removeEventListener('mousedown', onMouseDown, true)
+    document.documentElement.removeEventListener('mouseup', onMouseUp, true)
   }
 })
-const handleMove = (e) => {
+const onMouseMove = (e) => {
   mouseX.value = e.pageX || e.clientX + document.documentElement.scrollLeft
   mouseY.value = e.pageY || e.clientY + document.documentElement.scrollTop
-
   if (dragging.value && !linking.value) {
-
     let diffX = mouseX.value - lastMouseX.value
     let diffY = mouseY.value - lastMouseY.value
-
     lastMouseX.value = mouseX.value
     lastMouseY.value = mouseY.value
-
     moveWithDiff(diffX, diffY)
-
     hasDragged.value = true
   }
 }
-const handleDown = (e) => {
+const onMouseDown = (e) => {
   mouseX.value = e.pageX || e.clientX + document.documentElement.scrollLeft
   mouseY.value = e.pageY || e.clientY + document.documentElement.scrollTop
-
   lastMouseX.value = mouseX.value
   lastMouseY.value = mouseY.value
-
   const target = e.target || e.srcElement
   if (self.value.contains(target) && e.which === 1) {
     dragging.value = true
-
     emit('select')
-
     if (e.preventDefault) e.preventDefault()
   }
 }
-const handleUp = () => {
+const onMouseUp = () => {
   if (dragging.value) {
     dragging.value = false
-
     if (hasDragged.value) {
       save()
       hasDragged.value = false
     }
   }
-
   if (linking.value) {
     linking.value = false
   }
 }
-// Slots
 const slotMouseDown = (e, index) => {
   linking.value = true
   emit('linkingStart', index)
@@ -116,7 +104,6 @@ const slotMouseUp = (e, index) => {
 }
 const slotBreak = (e, index) => {
   linking.value = true
-
   emit('linkingBreak', index)
   if (e.preventDefault) e.preventDefault()
 }
@@ -151,15 +138,12 @@ const headerStyle = computed(() => {
 
 <style lang="less" scoped>
 @blockBorder: 1px;
-
 @ioPaddingInner: 2px 0;
 @ioHeight: 16px;
 @ioFontSize: 14px;
-
 @circleBorder: 1px;
 @circleSize: 10px;
 @circleMargin: 2px; // left/right
-
 @circleNewColor: #00FF00;
 @circleRemoveColor: #FF0000;
 @circleConnectedColor: #FFFF00;
@@ -193,7 +177,6 @@ const headerStyle = computed(() => {
 
   .inputs, .outputs {
     padding: @ioPaddingInner;
-
     display: block;
     width: 50%;
 
@@ -205,13 +188,10 @@ const headerStyle = computed(() => {
   .circle {
     box-sizing: border-box;
     margin-top: @ioHeight / 2 - @circleSize / 2;
-
     width: @circleSize;
     height: @circleSize;
-
     border: @circleBorder solid rgba(0, 0, 0, 0.5);
     border-radius: 100%;
-
     cursor: crosshair;
 
     &.active {
@@ -222,7 +202,6 @@ const headerStyle = computed(() => {
   .inputs {
     float: left;
     text-align: left;
-
     margin-left: -(@circleSize/2 + @blockBorder);
   }
 
@@ -255,7 +234,6 @@ const headerStyle = computed(() => {
   .outputs {
     float: right;
     text-align: right;
-
     margin-right: -(@circleSize/2 + @blockBorder);
   }
 
