@@ -1,5 +1,5 @@
 <template>
-  <div class="vue-block" :class="{selected: selected}" :style="style">
+  <div ref="self" class="vue-block" :class="{selected: selected}" :style="style">
     <header :style="headerStyle">
       {{ model.title }}
       <a class="delete" @click="deleteBlock">x</a>
@@ -21,142 +21,132 @@
     </div>
   </div>
 </template>
+<script setup>
+import {computed, onBeforeUnmount, onMounted, ref} from "vue";
 
-<script>
-export default {
-  name: 'VueBlock',
-  props: {
-    model: {
-      type: Object
-    },
-    selected: Boolean,
-    options: {
-      type: Object
-    }
-  },
-  created() {
-    this.mouseX = 0
-    this.mouseY = 0
-    this.lastMouseX = 0
-    this.lastMouseY = 0
+const props = defineProps({
+  model: {type: Object, required: true},
+  selected: {type: Boolean, default: false},
+  options: {type: Object}
+})
+const emit = defineEmits(['select', 'linkingStart', 'linkingStop', 'linkingBreak', 'update', 'delete', 'updatePosition'])
+const self = ref(null)
+const mouseX = ref(0)
+const mouseY = ref(0)
+const lastMouseX = ref(0)
+const lastMouseY = ref(0)
+const linking = ref(false)
+const dragging = ref(false)
+const width = ref(0)
+const hasDragged = ref(false)
+const position = ref({x: 0, y: 0})
+onMounted(() => {
+  width.value = props.options.width
+  position.value.x = props.model.x
+  position.value.y = props.model.y
+  if (document) {
+    document.documentElement.addEventListener('mousemove', handleMove, true)
+    document.documentElement.addEventListener('mousedown', handleDown, true)
+    document.documentElement.addEventListener('mouseup', handleUp, true)
+  }
+})
+onBeforeUnmount(() => {
+  if (document) {
+    document.documentElement.removeEventListener('mousemove', handleMove, true)
+    document.documentElement.removeEventListener('mousedown', handleDown, true)
+    document.documentElement.removeEventListener('mouseup', handleUp, true)
+  }
+})
+const handleMove = (e) => {
+  mouseX.value = e.pageX || e.clientX + document.documentElement.scrollLeft
+  mouseY.value = e.pageY || e.clientY + document.documentElement.scrollTop
 
-    this.linking = false
-    this.dragging = false
-  },
-  mounted() {
-    document.documentElement.addEventListener('mousemove', this.handleMove, true)
-    document.documentElement.addEventListener('mousedown', this.handleDown, true)
-    document.documentElement.addEventListener('mouseup', this.handleUp, true)
-    this.position.x = this.model.x
-    this.position.y = this.model.y
-  },
-  beforeDestroy() {
-    document.documentElement.removeEventListener('mousemove', this.handleMove, true)
-    document.documentElement.removeEventListener('mousedown', this.handleDown, true)
-    document.documentElement.removeEventListener('mouseup', this.handleUp, true)
-  },
-  data() {
-    return {
-      width: this.options.width,
-      hasDragged: false,
-      position: {x: 0, y: 0}
-    }
-  },
-  methods: {
-    handleMove(e) {
-      this.mouseX = e.pageX || e.clientX + document.documentElement.scrollLeft
-      this.mouseY = e.pageY || e.clientY + document.documentElement.scrollTop
+  if (dragging.value && !linking.value) {
 
-      if (this.dragging && !this.linking) {
+    let diffX = mouseX.value - lastMouseX.value
+    let diffY = mouseY.value - lastMouseY.value
 
-        let diffX = this.mouseX - this.lastMouseX
-        let diffY = this.mouseY - this.lastMouseY
+    lastMouseX.value = mouseX.value
+    lastMouseY.value = mouseY.value
 
-        this.lastMouseX = this.mouseX
-        this.lastMouseY = this.mouseY
+    moveWithDiff(diffX, diffY)
 
-        this.moveWithDiff(diffX, diffY)
-
-        this.hasDragged = true
-      }
-    },
-    handleDown(e) {
-      this.mouseX = e.pageX || e.clientX + document.documentElement.scrollLeft
-      this.mouseY = e.pageY || e.clientY + document.documentElement.scrollTop
-
-      this.lastMouseX = this.mouseX
-      this.lastMouseY = this.mouseY
-
-      const target = e.target || e.srcElement
-      if (this.$el.contains(target) && e.which === 1) {
-        this.dragging = true
-
-        this.$emit('select')
-
-        if (e.preventDefault) e.preventDefault()
-      }
-    },
-    handleUp() {
-      if (this.dragging) {
-        this.dragging = false
-
-        if (this.hasDragged) {
-          this.save()
-          this.hasDragged = false
-        }
-      }
-
-      if (this.linking) {
-        this.linking = false
-      }
-    },
-    // Slots
-    slotMouseDown(e, index) {
-      this.linking = true
-      this.$emit('linkingStart', index)
-      if (e.preventDefault) e.preventDefault()
-    },
-    slotMouseUp(e, index) {
-      this.$emit('linkingStop', index)
-      if (e.preventDefault) e.preventDefault()
-    },
-    slotBreak(e, index) {
-      this.linking = true
-
-      this.$emit('linkingBreak', index)
-      if (e.preventDefault) e.preventDefault()
-    },
-    save() {
-      this.$emit('update')
-    },
-    deleteBlock() {
-      this.$emit('delete')
-    },
-    moveWithDiff(diffX, diffY) {
-      let left = this.position.x + diffX / this.options.scale
-      let top = this.position.y + diffY / this.options.scale
-      this.position.x = left
-      this.position.y = top
-      this.$emit('updatePosition', this.position)
-    }
-  },
-  computed: {
-    style() {
-      return {
-        top: this.options.center.y + this.position.y * this.options.scale + 'px',
-        left: this.options.center.x + this.position.x * this.options.scale + 'px',
-        width: this.width + 'px',
-        transform: 'scale(' + (this.options.scale + '') + ')',
-        transformOrigin: 'top left'
-      }
-    },
-    headerStyle() {
-      return {
-        height: this.options.titleHeight + 'px'
-      }
-    }
+    hasDragged.value = true
   }
 }
+const handleDown = (e) => {
+  mouseX.value = e.pageX || e.clientX + document.documentElement.scrollLeft
+  mouseY.value = e.pageY || e.clientY + document.documentElement.scrollTop
+
+  lastMouseX.value = mouseX.value
+  lastMouseY.value = mouseY.value
+
+  const target = e.target || e.srcElement
+  if (self.value.contains(target) && e.which === 1) {
+    dragging.value = true
+
+    emit('select')
+
+    if (e.preventDefault) e.preventDefault()
+  }
+}
+const handleUp = () => {
+  if (dragging.value) {
+    dragging.value = false
+
+    if (hasDragged.value) {
+      save()
+      hasDragged.value = false
+    }
+  }
+
+  if (linking.value) {
+    linking.value = false
+  }
+}
+// Slots
+const slotMouseDown = (e, index) => {
+  linking.value = true
+  emit('linkingStart', index)
+  if (e.preventDefault) e.preventDefault()
+}
+const slotMouseUp = (e, index) => {
+  emit('linkingStop', index)
+  if (e.preventDefault) e.preventDefault()
+}
+const slotBreak = (e, index) => {
+  linking.value = true
+
+  emit('linkingBreak', index)
+  if (e.preventDefault) e.preventDefault()
+}
+const save = () => {
+  emit('update')
+}
+const deleteBlock = () => {
+  emit('delete')
+}
+const moveWithDiff = (diffX, diffY) => {
+  let left = position.value.x + diffX / props.options.scale
+  let top = position.value.y + diffY / props.options.scale
+  position.value.x = left
+  position.value.y = top
+  emit('updatePosition', position.value)
+}
+const style = computed(() => {
+  return {
+    top: props.options.center.y + position.value.y * props.options.scale + 'px',
+    left: props.options.center.x + position.value.x * props.options.scale + 'px',
+    width: width.value + 'px',
+    transform: 'scale(' + (props.options.scale + '') + ')',
+    transformOrigin: 'top left'
+  }
+})
+const headerStyle = computed(() => {
+  return {
+    height: props.options.titleHeight + 'px'
+  }
+})
 </script>
 
 <style lang="less" scoped>
