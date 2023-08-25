@@ -1,32 +1,39 @@
 <template>
-  <div ref="self" class="vue-block" :class="{'selected':model.selected}" :style="style">
+  <div ref='self' class='vue-block' :class="{'selected':model.selected}" :style='style'>
     <header>
+      <em class='setting' @click='updateBlock'>
+        <icon-setting />
+      </em>
       <span>{{ model.title }}</span>
-      <a class="delete" @click="deleteBlock">x</a>
+      <em class='delete' @click='deleteBlock'>
+        <icon-close />
+      </em>
     </header>
-    <div class="inputs">
-      <div class="input" v-for="(slot, index) in model.inputs">
-        <div class="circle inputSlot" :class="{active: slot.active}"
-             @mouseup="slotMouseUp($event, index)"
-             @mousedown="slotBreak($event, index)"></div>
+    <div class='inputs'>
+      <div class='input' v-for='(slot, index) in model.inputs'>
+        <div class='circle inputSlot' :class='{active: slot.active}'
+             @mouseup='slotMouseUp($event, index)'
+             @mousedown='slotBreak($event, index)'></div>
         {{ slot.label }}
       </div>
     </div>
-    <div class="outputs">
-      <div class="output" v-for="(slot, index) in model.outputs">
-        <div class="circle" :class="{active: slot.active}"
-             @mousedown="slotMouseDown($event, index)"></div>
+    <div class='outputs'>
+      <div class='output' v-for='(slot, index) in model.outputs'>
+        <div class='circle' :class='{active: slot.active}'
+             @mousedown='slotMouseDown($event, index)'></div>
         {{ slot.label }}
       </div>
     </div>
   </div>
 </template>
 <script setup>
-import {computed, onBeforeUnmount, onMounted, ref} from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import IconClose from './icons/IconClose.vue'
+import IconSetting from './icons/IconSetting.vue'
 
 const props = defineProps({
-  model: {type: Object, required: true},
-  options: {type: Object}
+  model: { type: Object, required: true },
+  options: { type: Object }
 })
 const emit = defineEmits(['select', 'linkingStart', 'linkingStop', 'linkingBreak', 'update', 'delete', 'updatePosition'])
 const self = ref(null)
@@ -38,7 +45,7 @@ const linking = ref(false)
 const dragging = ref(false)
 const width = ref(0)
 const hasDragged = ref(false)
-const position = ref({x: 0, y: 0})
+const position = ref({ x: 0, y: 0 })
 onMounted(() => {
   width.value = props.options.width
   position.value.x = props.model.x
@@ -84,7 +91,6 @@ const onMouseUp = () => {
   if (dragging.value) {
     dragging.value = false
     if (hasDragged.value) {
-      save()
       hasDragged.value = false
     }
   }
@@ -106,11 +112,11 @@ const slotBreak = (e, index) => {
   emit('linkingBreak', index)
   if (e.preventDefault) e.preventDefault()
 }
-const save = () => {
-  emit('update')
-}
 const deleteBlock = () => {
   emit('delete')
+}
+const updateBlock = () => {
+  emit('update')
 }
 const moveWithDiff = (diffX, diffY) => {
   let left = position.value.x + diffX / props.options.scale
@@ -130,7 +136,7 @@ const style = computed(() => {
 })
 </script>
 
-<style lang="less" scoped>
+<style lang='less' scoped>
 @blockBorder: 1px;
 @borderColor: #c4cbd1;
 @borderColorSelected: #333333;
@@ -172,16 +178,7 @@ const style = computed(() => {
     display: flex;
     height: 28px;
     align-items: center;
-
-    &:after {
-      content: '';
-      display: block;
-      width: 100%;
-      height: 1px;
-      background: @borderColor;
-      position: absolute;
-      bottom: 0;
-    }
+    border-bottom: 1px solid @borderColor;
 
     > span {
       font-size: 12px;
@@ -189,12 +186,29 @@ const style = computed(() => {
       font-weight: 600;
       color: #666;
       text-align: center;
+      margin: 0 4px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
     }
 
-    > .delete {
-      color: red;
+    > .delete, > .setting {
+      display: inline-block;
+      line-height: 1;
+      color: @borderColor;
       cursor: pointer;
-      flex: 0 0 20px;
+      flex: 0 0 16px;
+      height: 16px;
+      margin-right: 4px;
+
+      &:hover {
+        color: #333333;
+      }
+    }
+
+    > .setting {
+      margin-right: 0;
+      margin-left: 4px;
     }
   }
 
