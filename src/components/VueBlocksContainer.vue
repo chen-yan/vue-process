@@ -1,6 +1,6 @@
 <template>
-  <div ref="root" class='vue-container' style='height: 100%'>
-    <VueLink :lines='lines'/>
+  <div ref='root' class='vue-container' style='height: 100%'>
+    <VueLink :lines='lines' />
     <VueBlock v-for='block in blocks'
               :key='block.id'
               :model='block'
@@ -16,23 +16,23 @@
   </div>
 </template>
 <script setup>
-import {computed, defineExpose, onBeforeUnmount, onMounted, ref, watch} from 'vue'
-import VueLink from "@/components/VueLink.vue";
-import VueBlock from "@/components/VueBlock.vue";
-import {getMousePosition} from "@/components/helpers/mouse.ts";
-import merge from "deepmerge";
+import { computed, defineExpose, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import VueLink from '@/components/VueLink.vue'
+import VueBlock from '@/components/VueBlock.vue'
+import { getMousePosition } from '@/components/helpers/mouse.ts'
+import merge from 'deepmerge'
 
 const root = ref(null)
 
 const props = defineProps({
-  blocksContent: {type: Array, default: []},
+  blocksContent: { type: Array, default: [] },
   scene: {
     type: Object,
-    default: {blocks: [], links: [], container: {}},
+    default: { blocks: [], links: [], container: {} },
     options: {
       type: Object
     }
-  },
+  }
 })
 
 const dragging = ref(false)
@@ -69,7 +69,6 @@ let defaultScene = ref({
 const optionsForChild = computed(() => {
   return {
     width: 200,
-    titleHeight: 20,
     scale: scale.value,
     inputSlotClassName: inputSlotClassName.value,
     center: {
@@ -264,7 +263,8 @@ const getConnectionPos = (block, slotNumber, isInput) => {
   x += block.x
   y += block.y
 
-  y += optionsForChild.value.titleHeight
+  y += 32
+  // y += optionsForChild.value.titleHeight
 
   if (isInput && block.inputs.length > slotNumber) {
   } else if (!isInput && block.outputs.length > slotNumber) {
@@ -275,9 +275,9 @@ const getConnectionPos = (block, slotNumber, isInput) => {
   }
 
   // (height / 2 + blockBorder + padding)
-  y += (16 / 2 + 1 + 2)
+  y += (20 / 2 + 1 + 2)
   //  + (height * slotNumber)
-  y += (16 * slotNumber)
+  y += (20 * slotNumber)
 
   x *= scale.value
   y *= scale.value
@@ -285,11 +285,11 @@ const getConnectionPos = (block, slotNumber, isInput) => {
   x += centerX.value
   y += centerY.value
 
-  return {x: x, y: y}
+  return { x: x, y: y }
 }
 // Linking
 const linkingStart = (block, slotNumber) => {
-  linkStartData.value = {block: block, slotNumber: slotNumber}
+  linkStartData.value = { block: block, slotNumber: slotNumber }
   let linkStartPos = getConnectionPos(linkStartData.value.block, linkStartData.value.slotNumber, false)
   tempLink.value = {
     x1: linkStartPos.x,
@@ -306,7 +306,7 @@ const linkingStop = (targetBlock, slotNumber) => {
       return !(value.targetID === targetBlock.id && value.targetSlot === slotNumber)
     })
 
-    let maxID = Math.max(0, ...links.value.map(function (o) {
+    let maxID = Math.max(0, ...links.value.map(function(o) {
       return o.id
     }))
 
@@ -359,7 +359,7 @@ const getBoundingClientRect = () => {
 
 // Blocks
 const addNewBlock = (nodeName, x, y) => {
-  let maxID = Math.max(0, ...blocks.value.map(function (o) {
+  let maxID = Math.max(0, ...blocks.value.map(function(o) {
     return o.id
   }))
 
@@ -452,8 +452,8 @@ const blockSelect = (block) => {
 const blockDeselect = (block) => {
   block.selected = false
   if (block &&
-      selectedBlock.value &&
-      selectedBlock.value.id === block.id
+    selectedBlock.value &&
+    selectedBlock.value.id === block.id
   ) {
     selectedBlock.value = null
   }
@@ -570,11 +570,13 @@ const exportScene = () => {
     return value
   })
 
-  return {
+  let _new_data = {
     blocks: _blocks,
     links: links.value,
     container: container.value
   }
+  console.log(_new_data)
+  return _new_data
 }
 const updateScene = () => {
   emit('update:scene', exportScene())
@@ -611,7 +613,7 @@ watch(props.scene, (_new, _pre) => {
   importScene()
 })
 
-defineExpose({addNewBlock, getBoundingClientRect})
+defineExpose({ addNewBlock, getBoundingClientRect })
 </script>
 
 <style lang='less' scoped>

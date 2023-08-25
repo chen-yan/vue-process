@@ -9,19 +9,21 @@
         <icon-close />
       </em>
     </header>
-    <div class='inputs'>
-      <div class='input' v-for='(slot, index) in model.inputs'>
-        <div class='circle inputSlot' :class='{active: slot.active}'
-             @mouseup='slotMouseUp($event, index)'
-             @mousedown='slotBreak($event, index)'></div>
-        {{ slot.label }}
+    <div class='properties'>
+      <div class='inputs'>
+        <div class='input' v-for='(slot, index) in model.inputs'>
+          <div class='circle inputSlot' :class='{active: slot.active}'
+               @mouseup='slotMouseUp($event, index)'
+               @mousedown='slotBreak($event, index)'></div>
+          {{ slot.label }}
+        </div>
       </div>
-    </div>
-    <div class='outputs'>
-      <div class='output' v-for='(slot, index) in model.outputs'>
-        <div class='circle' :class='{active: slot.active}'
-             @mousedown='slotMouseDown($event, index)'></div>
-        {{ slot.label }}
+      <div class='outputs'>
+        <div class='output' v-for='(slot, index) in model.outputs'>
+          <div class='circle' :class='{active: slot.active}'
+               @mousedown='slotMouseDown($event, index)'></div>
+          {{ slot.label }}
+        </div>
       </div>
     </div>
   </div>
@@ -140,15 +142,15 @@ const style = computed(() => {
 @blockBorder: 1px;
 @borderColor: #c4cbd1;
 @borderColorSelected: #333333;
-@ioPaddingInner: 2px 0;
+@ioPaddingInner: 4px 0;
 @ioHeight: 16px;
-@ioFontSize: 14px;
+@ioFontSize: 12px;
 @circleBorder: 1px;
 @circleSize: 10px;
 @circleMargin: 2px; // left/right
-@circleNewColor: #00FF00;
-@circleRemoveColor: #FF0000;
-@circleConnectedColor: #FFFF00;
+@circleNewColor: #52c41a;
+@circleRemoveColor: #ff4d4f;
+@circleConnectedColor: #faad14;
 
 .vue-block {
   position: absolute;
@@ -212,51 +214,50 @@ const style = computed(() => {
     }
   }
 
-  .inputs, .outputs {
-    padding: @ioPaddingInner;
-    display: block;
-    width: 50%;
+  .properties {
+    display: flex;
+    align-items: flex-start;
+    padding: 4px 0 8px 0;
 
-    > * {
-      width: 100%;
+    .inputs, .outputs {
+      width: 50%;
     }
+  }
+
+  .outputs {
+    text-align: right;
   }
 
   .circle {
     box-sizing: border-box;
-    margin-top: @ioHeight / 2 - @circleSize / 2;
-    width: @circleSize;
-    height: @circleSize;
+    width: calc(@circleSize + 1px);
+    height: calc(@circleSize + 1px);
     border: @circleBorder solid rgba(0, 0, 0, 0.5);
     border-radius: 100%;
     cursor: crosshair;
+    position: absolute;
+    top: 5px;
+    background: white;
 
     &.active {
       background: @circleConnectedColor;
     }
   }
 
-  .inputs {
-    float: left;
-    text-align: left;
-    margin-left: -(@circleSize/2 + @blockBorder);
-  }
-
   .input, .output {
-    height: @ioHeight;
-    overflow: hidden;
+    line-height: 1;
+    padding: @ioPaddingInner;
     font-size: @ioFontSize;
-
-    &:last-child {
-    }
+    position: relative;
+    word-break: break-all;
   }
 
   .input {
-    float: left;
+    padding-left: calc(4px + @circleSize / 2);
+    padding-right: 4px;
 
     .circle {
-      float: left;
-      margin-right: @circleMargin;
+      left: -((@circleSize + 2px)/2);
 
       &:hover {
         background: @circleNewColor;
@@ -268,18 +269,12 @@ const style = computed(() => {
     }
   }
 
-  .outputs {
-    float: right;
-    text-align: right;
-    margin-right: -(@circleSize/2 + @blockBorder);
-  }
-
   .output {
-    float: right;
+    padding-right: calc(4px + @circleSize / 2);
+    padding-left: 4px;
 
     .circle {
-      float: right;
-      margin-left: @circleMargin;
+      right: -((@circleSize + 2px)/2);
 
       &:hover {
         background: @circleNewColor;
