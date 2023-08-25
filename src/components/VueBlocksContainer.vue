@@ -131,13 +131,13 @@ const lines = computed(() => {
       x2: x2,
       y2: y2,
       style: {
-        stroke: '#F85',
-        strokeWidth: 4 * scale.value,
+        stroke: '#666',
+        strokeWidth: 1 * scale.value,
         fill: 'none'
       },
       outlineStyle: {
-        stroke: '#666',
-        strokeWidth: 6 * scale.value,
+        stroke: '#999',
+        strokeWidth: 1 * scale.value,
         strokeOpacity: 0.6,
         fill: 'none'
       }
@@ -146,8 +146,8 @@ const lines = computed(() => {
 
   if (tempLink.value) {
     tempLink.value.style = {
-      stroke: '#8f8f8f',
-      strokeWidth: 4 * scale.value,
+      stroke: '#999',
+      strokeWidth: 1 * scale.value,
       fill: 'none'
     }
 
@@ -451,14 +451,12 @@ const blockSelect = (block) => {
 }
 const blockDeselect = (block) => {
   block.selected = false
-
   if (block &&
       selectedBlock.value &&
       selectedBlock.value.id === block.id
   ) {
     selectedBlock.value = null
   }
-
   emit('blockDeselect', block)
 }
 const blockDelete = (block) => {

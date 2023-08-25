@@ -1,7 +1,7 @@
 <template>
-  <div ref="self" class="vue-block" :class="{selected: selected}" :style="style">
-    <header :style="headerStyle">
-      {{ model.title }}
+  <div ref="self" class="vue-block" :class="{'selected':model.selected}" :style="style">
+    <header>
+      <span>{{ model.title }}</span>
       <a class="delete" @click="deleteBlock">x</a>
     </header>
     <div class="inputs">
@@ -26,7 +26,6 @@ import {computed, onBeforeUnmount, onMounted, ref} from "vue";
 
 const props = defineProps({
   model: {type: Object, required: true},
-  selected: {type: Boolean, default: false},
   options: {type: Object}
 })
 const emit = defineEmits(['select', 'linkingStart', 'linkingStop', 'linkingBreak', 'update', 'delete', 'updatePosition'])
@@ -129,15 +128,12 @@ const style = computed(() => {
     transformOrigin: 'top left'
   }
 })
-const headerStyle = computed(() => {
-  return {
-    height: props.options.titleHeight + 'px'
-  }
-})
 </script>
 
 <style lang="less" scoped>
 @blockBorder: 1px;
+@borderColor: #c4cbd1;
+@borderColorSelected: #333333;
 @ioPaddingInner: 2px 0;
 @ioHeight: 16px;
 @ioFontSize: 14px;
@@ -151,27 +147,54 @@ const headerStyle = computed(() => {
 .vue-block {
   position: absolute;
   box-sizing: border-box;
-  border: @blockBorder solid black;
+  border: @blockBorder solid @borderColor;
   background: white;
   z-index: 1;
   opacity: 0.9;
   cursor: move;
+  border-radius: 8px;
 
   &.selected {
-    border: @blockBorder solid red;
+    border: @blockBorder solid @borderColorSelected;
     z-index: 2;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+
+    > header {
+      span {
+        color: #333;
+      }
+    }
   }
 
   > header {
-    background: #bfbfbf;
     text-align: center;
+    position: relative;
+    display: flex;
+    height: 28px;
+    align-items: center;
+
+    &:after {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 1px;
+      background: @borderColor;
+      position: absolute;
+      bottom: 0;
+    }
+
+    > span {
+      font-size: 12px;
+      flex-grow: 1;
+      font-weight: 600;
+      color: #666;
+      text-align: center;
+    }
 
     > .delete {
       color: red;
       cursor: pointer;
-      float: right;
-      position: absolute;
-      right: 5px;
+      flex: 0 0 20px;
     }
   }
 
