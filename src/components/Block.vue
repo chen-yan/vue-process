@@ -192,6 +192,7 @@ const style = computed(() => {
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
+      user-select: none;
     }
 
     > .delete, > .setting {
@@ -257,6 +258,7 @@ const style = computed(() => {
       overflow: hidden;
       white-space: nowrap;
       display: block;
+      user-select: none
     }
   }
 
