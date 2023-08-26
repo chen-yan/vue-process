@@ -1,6 +1,6 @@
 <script setup lang='ts'>
-import VueBlocksContainer from '../components/VueBlocksContainer.vue'
-import VueBlockProperty from '../components/VueBlockProperty.vue'
+import BlocksContainer from '../components/BlocksContainer.vue'
+import BlockProperty from '../components/BlockProperty.vue'
 import merge from 'deepmerge'
 import { reactive, ref, nextTick, computed } from 'vue'
 import domHelper from '../components/helpers/mouse.ts'
@@ -333,7 +333,7 @@ const selectBlocksType = computed(() => {
 
 <template>
   <div class='wrapper'>
-    <VueBlocksContainer
+    <blocks-container
       @contextmenu.native='showContextMenu'
       @click.native='closeContextMenu'
       ref='container'
@@ -343,7 +343,7 @@ const selectBlocksType = computed(() => {
       @blockDeselect='deselectBlock'
       @updateScene='updateScene'
       class='container' />
-    <VueBlockProperty :property='selectedBlockProperty' @save='saveProperty' />
+    <block-property :property='selectedBlockProperty' @save='saveProperty' />
     <label>
       <select name='type' v-model='selectedType'>
         <template v-for='type in selectBlocksType'>

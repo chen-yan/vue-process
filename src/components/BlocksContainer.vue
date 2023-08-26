@@ -1,7 +1,7 @@
 <template>
   <div ref='root' class='vue-container' style='height: 100%'>
-    <VueLink :lines='lines' />
-    <VueBlock v-for='block in blocks'
+    <links :lines='lines' />
+    <block v-for='block in blocks'
               :key='block.id'
               :model='block'
               :options='optionsForChild'
@@ -17,8 +17,8 @@
 </template>
 <script setup>
 import { computed, defineExpose, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import VueLink from '@/components/VueLink.vue'
-import VueBlock from '@/components/VueBlock.vue'
+import Links from './Links.vue'
+import Block from './Block.vue'
 import { getMousePosition } from '@/components/helpers/mouse.ts'
 import merge from 'deepmerge'
 
