@@ -1,6 +1,6 @@
 <template>
   <div ref='self' class='vue-block' :class="{'selected':model.selected}" :style='style'>
-    <header>
+    <header ref="selectElm">
       <em class='setting' @click='updateBlock'>
         <icon-setting />
       </em>
@@ -39,6 +39,7 @@ const props = defineProps({
 })
 const emit = defineEmits(['select', 'linkingStart', 'linkingStop', 'linkingBreak', 'update', 'delete', 'updatePosition'])
 const self = ref(null)
+const selectElm = ref(null)
 const mouseX = ref(0)
 const mouseY = ref(0)
 const lastMouseX = ref(0)
@@ -83,7 +84,7 @@ const onMouseDown = (e) => {
   lastMouseX.value = mouseX.value
   lastMouseY.value = mouseY.value
   const target = e.target || e.srcElement
-  if (self.value.contains(target) && e.which === 1) {
+  if (selectElm.value.contains(target) && e.which === 1) {
     dragging.value = true
     emit('select')
     if (e.preventDefault) e.preventDefault()
@@ -159,7 +160,6 @@ const style = computed(() => {
   background: white;
   z-index: 1;
   opacity: 0.9;
-  cursor: move;
   border-radius: 8px;
 
   &.selected {
@@ -181,7 +181,7 @@ const style = computed(() => {
     height: 28px;
     align-items: center;
     border-bottom: 1px solid @borderColor;
-
+    cursor: move;
     > span {
       font-size: 12px;
       flex-grow: 1;
