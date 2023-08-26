@@ -249,13 +249,20 @@ const style = computed(() => {
     padding: @ioPaddingInner;
     font-size: @ioFontSize;
     position: relative;
-    word-break: break-all;
+  }
+
+  .input, .output{
+    >span{
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      display: block;
+    }
   }
 
   .input {
     padding-left: calc(4px + @circleSize / 2);
     padding-right: 4px;
-
     .circle {
       left: -((@circleSize + 2px)/2);
 
