@@ -1,6 +1,6 @@
 <template>
   <div ref='root' class='vue-container' style='height: 100%'>
-    <links :lines='lines' />
+    <links :lines='lines'/>
     <block v-for='block in blocks'
               :key='block.id'
               :model='block'
