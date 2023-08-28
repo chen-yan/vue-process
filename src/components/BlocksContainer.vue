@@ -2,33 +2,33 @@
   <div ref='root' class='vue-container' style='height: 100%'>
     <links :lines='lines'/>
     <block v-for='block in blocks'
-              :key='block.id'
-              :model='block'
-              :options='optionsForChild'
-              @update='updateScene'
-              @linkingStart='linkingStart(block, $event)'
-              @linkingStop='linkingStop(block, $event)'
-              @linkingBreak='linkingBreak(block, $event)'
-              @select='blockSelect(block)'
-              @delete='blockDelete(block)'
-              @updatePosition='blockPositionUpdated(block, $event)'
+           :key='block.id'
+           :model='block'
+           :options='optionsForChild'
+           @on-setting='updateScene'
+           @on-link-start='linkingStart(block, $event)'
+           @on-link-stop='linkingStop(block, $event)'
+           @on-link-break='linkingBreak(block, $event)'
+           @on-select='blockSelect(block)'
+           @on-delete='blockDelete(block)'
+           @on-position='blockPositionUpdated(block, $event)'
     />
   </div>
 </template>
 <script setup>
-import { computed, defineExpose, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import {computed, defineExpose, onBeforeUnmount, onMounted, ref, watch} from 'vue'
 import Links from './Links.vue'
 import Block from './Block.vue'
-import { getMousePosition } from '@/components/helpers/mouse.ts'
+import {getMousePosition} from '@/components/helpers/mouse.ts'
 import merge from 'deepmerge'
 
 const root = ref(null)
 
 const props = defineProps({
-  blocksContent: { type: Array, default: [] },
+  blocksContent: {type: Array, default: []},
   scene: {
     type: Object,
-    default: { blocks: [], links: [], container: {} },
+    default: {blocks: [], links: [], container: {}},
     options: {
       type: Object
     }
@@ -285,11 +285,11 @@ const getConnectionPos = (block, slotNumber, isInput) => {
   x += centerX.value
   y += centerY.value
 
-  return { x: x, y: y }
+  return {x: x, y: y}
 }
 // Linking
 const linkingStart = (block, slotNumber) => {
-  linkStartData.value = { block: block, slotNumber: slotNumber }
+  linkStartData.value = {block: block, slotNumber: slotNumber}
   let linkStartPos = getConnectionPos(linkStartData.value.block, linkStartData.value.slotNumber, false)
   tempLink.value = {
     x1: linkStartPos.x,
@@ -306,7 +306,7 @@ const linkingStop = (targetBlock, slotNumber) => {
       return !(value.targetID === targetBlock.id && value.targetSlot === slotNumber)
     })
 
-    let maxID = Math.max(0, ...links.value.map(function(o) {
+    let maxID = Math.max(0, ...links.value.map(function (o) {
       return o.id
     }))
 
@@ -359,7 +359,7 @@ const getBoundingClientRect = () => {
 
 // Blocks
 const addNewBlock = (nodeName, x, y) => {
-  let maxID = Math.max(0, ...blocks.value.map(function(o) {
+  let maxID = Math.max(0, ...blocks.value.map(function (o) {
     return o.id
   }))
 
@@ -452,8 +452,8 @@ const blockSelect = (block) => {
 const blockDeselect = (block) => {
   block.selected = false
   if (block &&
-    selectedBlock.value &&
-    selectedBlock.value.id === block.id
+      selectedBlock.value &&
+      selectedBlock.value.id === block.id
   ) {
     selectedBlock.value = null
   }
@@ -611,7 +611,7 @@ watch(() => props.scene, (_new, _pre) => {
   importScene()
 })
 
-defineExpose({ addNewBlock, getBoundingClientRect })
+defineExpose({addNewBlock, getBoundingClientRect})
 </script>
 
 <style lang='less' scoped>

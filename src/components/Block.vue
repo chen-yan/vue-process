@@ -37,7 +37,7 @@ const props = defineProps({
   model: { type: Object, required: true },
   options: { type: Object }
 })
-const emit = defineEmits(['select', 'linkingStart', 'linkingStop', 'linkingBreak', 'update', 'delete', 'updatePosition'])
+const emit = defineEmits(['onSelect', 'onLinkStart', 'onLinkStop', 'onLinkBreak', 'onSetting', 'onDelete', 'onPosition'])
 const self = ref(null)
 const selectElm = ref(null)
 const mouseX = ref(0)
@@ -86,7 +86,7 @@ const onMouseDown = (e) => {
   const target = e.target || e.srcElement
   if (selectElm.value.contains(target) && e.which === 1) {
     dragging.value = true
-    emit('select')
+    emit('onSelect')
     if (e.preventDefault) e.preventDefault()
   }
 }
@@ -103,30 +103,30 @@ const onMouseUp = () => {
 }
 const slotMouseDown = (e, index) => {
   linking.value = true
-  emit('linkingStart', index)
+  emit('onLinkStart', index)
   if (e.preventDefault) e.preventDefault()
 }
 const slotMouseUp = (e, index) => {
-  emit('linkingStop', index)
+  emit('onLinkStop', index)
   if (e.preventDefault) e.preventDefault()
 }
 const slotBreak = (e, index) => {
   linking.value = true
-  emit('linkingBreak', index)
+  emit('onLinkBreak', index)
   if (e.preventDefault) e.preventDefault()
 }
 const deleteBlock = () => {
-  emit('delete')
+  emit('onDelete')
 }
 const updateBlock = () => {
-  emit('update')
+  emit('onSetting')
 }
 const moveWithDiff = (diffX, diffY) => {
   let left = position.value.x + diffX / props.options.scale
   let top = position.value.y + diffY / props.options.scale
   position.value.x = left
   position.value.y = top
-  emit('updatePosition', position.value)
+  emit('onPosition', position.value)
 }
 const style = computed(() => {
   return {
